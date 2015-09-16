@@ -7,110 +7,179 @@ var {
   ScrollView,
 } = React;
 
+var data = {
+  "全部区域": {
+    "全部区域": ["全部区域"],
+    "热门商圈": [
+      "虹桥地区",
+      "徐家汇地区",
+      "淮海路商业区",
+      "静安寺地区",
+      "上海火车站地区",
+      "浦东陆家嘴金融贸易区",
+      "四川北路商业区",
+      "人民广场地区",
+      "南翔、安亭汽车城"
+    ],
+    "热门行政区": [
+      "静安区",
+      "徐汇区",
+      "长宁区",
+      "黄埔区",
+      "虹口区",
+      "宝山区",
+      "闸北区"
+    ]
+  },
+  "地铁沿线":{
+
+  } 
+};
+
+//设定内置的属性
+//选中项，例如：_type_0_2 表示第一个Tab选中，并且第二个Tab中的第三项选中
+var prefixType = '_type_';
+
+//选中项样式，例如：_style_0_2 表示第一个Tab选中，并且第二个Tab中的第三项选中时的样式
+var prefixStyle = '_style_';
+
+//默认左侧选中的背景颜色
+var defaultBackgroundColor = {backgroundColor:'#fff'};
+
 var MenuList = React.createClass({
   getInitialState: function(){
-    return {
-      wholeArea: false,
-      hotBusiness: true,
-      hotDistrict: false,
-      wholeAreaFFF:{},
-      hotBusinessFFF:{backgroundColor:'#fff'},
-      hotDistrictFFF:{}
-    };
+    var data = this.props.data;
+    //左侧选择的index
+    var nSelected = this.props.nSelected;
+    //头部选择的index
+    var tabSelected = this.props.tabSelected;
+    var obj = {};
+    var kIndex = 0;
+    for(var k in data){
+      var childData = data[k];
+      var cIndex = 0;
+      for(var c in childData){
+        var type = prefixType + k + '_' + c;
+        var style = prefixStyle + k + '_' + c;
+        obj[type] = false;
+        obj[style] = {};
+        //设定默认选中项
+        if(nSelected === cIndex && tabSelected === kIndex){
+          obj[type] = true;
+          obj[style] = defaultBackgroundColor;
+        }
+        cIndex++;
+      }
+      kIndex++;
+    }
+    obj.tabSelected = tabSelected;
+    console.log(obj);
+    return obj;
   },
   render: function(){
+    var header = this.renderlHeader();
+    var left = this.renderLeft();
+    var right = this.renderRight();
     return (
       <View style={styles.container}>
         <View style={[styles.row, styles.header]}>
-          <View style={[styles.flex_1, styles.center]}>
-            <Text style={[styles.header_text, styles.active_blue]}>全部区域</Text>
-          </View>
-          <View style={[styles.flex_1, styles.center]}>
-            <Text style={[styles.header_text]}>地铁沿线</Text>
-          </View>
+          {header}
         </View>
         <View style={[styles.row, styles.flex_1]}>
           <ScrollView style={[styles.flex_1, styles.left_pannel]}>
-            <Text onPress={this.wholeArea} style={[styles.left_row, this.state.wholeAreaFFF]}>  全部区域</Text>
-            <Text onPress={this.hotBusiness} style={[styles.left_row, this.state.hotBusinessFFF]}>  热门商圈</Text>
-            <Text onPress={this.hotDistrict} style={[styles.left_row, this.state.hotDistrictFFF]}>  热门行政区</Text>
+            {left}
           </ScrollView>
-
-          {
-            this.state.wholeArea ?
-            <ScrollView style={[styles.flex_1, styles.right_pannel]}>
-              <Text style={styles.left_row}>全部区域</Text>
-            </ScrollView>
-            : null
-          }
-
-
-          {
-            this.state.hotBusiness ?
-            <ScrollView style={[styles.flex_1, styles.right_pannel]}>
-              <Text onPress={this.} style={styles.left_row}>虹桥地区</Text>
-              <Text style={styles.left_row}>徐家汇地区</Text>
-              <Text style={styles.left_row}>淮海路商业区</Text>
-              <Text style={styles.left_row}>静安寺地区</Text>
-              <Text style={styles.left_row}>上海火车站地区</Text>
-              <Text style={styles.left_row}>浦东陆家嘴金融贸易区</Text>
-              <Text style={styles.left_row}>四川北路商业区</Text>
-              <Text style={styles.left_row}>人民广场地区</Text>
-              <Text style={styles.left_row}>南翔、安亭汽车城</Text>
-            </ScrollView>
-            : null
-          }
-
-          {
-            this.state.hotDistrict ?
-            <ScrollView style={[styles.flex_1, styles.right_pannel]}>
-              <Text style={styles.left_row}>静安区</Text>
-              <Text style={styles.left_row}>徐汇区</Text>
-              <Text style={styles.left_row}>长宁区</Text>
-              <Text style={styles.left_row}>黄埔区</Text>
-              <Text style={styles.left_row}>虹口区</Text>
-              <Text style={styles.left_row}>宝山区</Text>
-              <Text style={styles.left_row}>闸北区</Text>
-            </ScrollView>
-            : null
-          }
+          <ScrollView style={[styles.flex_1, styles.right_pannel]}>
+            {right}
+          </ScrollView>
           
         </View>
       </View>
     );
   },
 
-  wholeArea: function(){
-    this.setState({
-      wholeArea: true,
-      hotBusiness: false,
-      hotDistrict: false,
-      wholeAreaFFF:{backgroundColor:'#fff'},
-      hotBusinessFFF:{},
-      hotDistrictFFF:{}
-    });
+  //渲染头部TabBar
+  renderlHeader: function(){
+    var data = this.props.data;
+    var tabSelected = this.props.tabSelected;
+    var header = [];
+    var tabIndex = 0;
+    for(var i in data){
+      var tabStyle = null;
+      if(tabIndex === tabSelected){
+        tabStyle=[styles.header_text, styles.active_blue];
+      }else{
+        tabStyle = [styles.header_text];
+      }
+      header.push(
+        <View style={[styles.flex_1, styles.center]}>
+          <Text style={tabStyle}>{i}</Text>
+        </View>
+      );
+      tabIndex ++;
+    }
+    return header;
   },
 
-  hotBusiness: function(){
-    this.setState({
-      wholeArea: false,
-      hotBusiness: true,
-      hotDistrict: false,
-      wholeAreaFFF:{},
-      hotBusinessFFF:{backgroundColor:'#fff'},
-      hotDistrictFFF:{}
-    });
+  //渲染左侧
+  renderLeft: function(){
+    var data = this.props.data;
+    var tabSelected = this.props.tabSelected;
+    var leftPannel = [];
+    var index = 0;
+    for(var i in data){
+      if(index === tabSelected){
+        for(var k in data[i]){
+          var style = this.state[prefixStyle + i + '_' + k];
+          leftPannel.push(<Text onPress={this.showRight.bind(this, i, k)} style={[styles.left_row, style]}>  {k}</Text>);
+        }
+        break;
+      }
+      index ++;
+    }
+    return leftPannel;
   },
-
-  hotDistrict: function(){
-    this.setState({
-      wholeArea: false,
-      hotBusiness: false,
-      hotDistrict: true,
-      wholeAreaFFF:{},
-      hotBusinessFFF:{},
-      hotDistrictFFF:{backgroundColor:'#fff'}
-    });
+  //渲染右边，二级菜单
+  renderRight: function(){
+    var data = this.props.data;
+    var tabSelected = this.props.tabSelected;
+    var nSelected = this.props.nSelected;
+    var index = 0;
+    var rightPannel = [];
+    for(var i in data){
+      if(tabSelected === index ){
+        for(var k in data[i]){
+          if(this.state[prefixType + i + '_' + k]){
+            for(var j in data[i][k]){
+              rightPannel.push(<Text style={styles.left_row}>{data[i][k][j]}</Text>);
+            }
+            break;
+          }
+        }
+      }
+      index ++;
+    }
+    return rightPannel;
+  },
+  //点击左侧，展示右侧二级菜单
+  showRight: function(tabIndex, nIndex){
+    var obj = {};
+    for(var k in this.state){
+      //将prefixType或者prefixStyle类型全部置false
+      if(k.indexOf(prefixType) > -1){
+        var obj = {};
+        obj[k] = false;
+        this.setState(obj);
+      }
+      if(k.indexOf(prefixStyle) > -1){
+        var obj = {};
+        obj[k] = {};
+        this.setState(obj);
+      }
+    }
+    obj[prefixType + tabIndex + '_' + nIndex] = true;
+    obj[prefixStyle + tabIndex + '_' + nIndex] = defaultBackgroundColor;
+    this.setState(obj);
   }
 });
 
@@ -166,7 +235,7 @@ var App = React.createClass({
   render: function(){
     return (
       <View style={{marginTop:25}}>
-        <MenuList/>
+        <MenuList data={data} nSelected={1} tabSelected={0}/>
       </View>
     );
   }

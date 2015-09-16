@@ -6,8 +6,20 @@ react-native-tab is a simple module for add a "Tab Menu" to your React Native ap
 ![](img/3.png)       
 
 ### Usage
+
 ##### Demo1:
 
+    var React = require('react-native');
+    var MenuList = require('react-native-tab');
+    var {
+        AppRegistry,
+        StyleSheet,
+        Text,
+        View,
+        ScrollView,
+        TouchableOpacity,
+     } = React;
+      
     var data = {
       "Language": {
         "All": ["All"],
@@ -51,7 +63,7 @@ react-native-tab is a simple module for add a "Tab Menu" to your React Native ap
 ##### Demo2:
 
     var React = require('react-native');
-    var MenuList = require('./../tab');
+    var MenuList = require('react-native-tab');
     
     var {
       AppRegistry,

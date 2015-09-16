@@ -1,0 +1,25 @@
+{
+  "name": "react-native-tab",
+  "version": "1.0.0",
+  "description": "react-native-tab is a simple module for add a \"Tab Menu\" to your React Native app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vczero/react-native-tab.git"
+  },
+  "keywords": [
+    "react",
+    "native",
+    "react-native",
+    "tab"
+  ],
+  "author": "vczero",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vczero/react-native-tab/issues"
+  },
+  "homepage": "https://github.com/vczero/react-native-tab#readme"
+}

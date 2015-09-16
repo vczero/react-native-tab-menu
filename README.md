@@ -2,8 +2,8 @@
 react-native-tab is a simple module for add a "Tab Menu" to your React Native app.
 
 ### Features
-![](1.png)       
-![](3.png)       
+![](img/1.png)       
+![](img/3.png)       
 
 ### Usage
 ##### Demo1:

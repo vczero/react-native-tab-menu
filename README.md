@@ -6,8 +6,25 @@ react-native-tab is a simple module for add a "Tab Menu" to your React Native ap
 ![](img/3.png)       
 
 ### Usage
+
+    npm install react-native-tab
+           
+![](img/4.png)       
+
+
 ##### Demo1:
 
+    var React = require('react-native');
+    var MenuList = require('react-native-tab');
+    var {
+        AppRegistry,
+        StyleSheet,
+        Text,
+        View,
+        ScrollView,
+        TouchableOpacity,
+     } = React;
+      
     var data = {
       "Language": {
         "All": ["All"],
@@ -29,8 +46,8 @@ react-native-tab is a simple module for add a "Tab Menu" to your React Native ap
         "Other": ["Sublime Text", "WebStrom",]
       }
     };
-    
-    
+
+
     var App = React.createClass({
       render: function(){
         return (
@@ -43,24 +60,23 @@ react-native-tab is a simple module for add a "Tab Menu" to your React Native ap
         alert(val);
       }
     });
-    
-    
+
+
     AppRegistry.registerComponent('app', () => App);
 
 
 ##### Demo2:
 
     var React = require('react-native');
-    var MenuList = require('./../tab');
-    
+    var MenuList = require('react-native-tab');
     var {
-      AppRegistry,
-      StyleSheet,
-      Text,
-      View,
-      ScrollView,
-      TouchableOpacity,
-    } = React;
+        AppRegistry,
+        StyleSheet,
+        Text,
+        View,
+        ScrollView,
+        TouchableOpacity,
+     } = React;
     
     var data = {
       "全部区域": {

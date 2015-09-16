@@ -1,40 +1,12 @@
 var React = require('react-native');
 var {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
   ScrollView,
-} = React;
+  TouchableOpacity,
+  } = React;
 
-var data = {
-  "全部区域": {
-    "全部区域": ["全部区域"],
-    "热门商圈": [
-      "虹桥地区",
-      "徐家汇地区",
-      "淮海路商业区",
-      "静安寺地区",
-      "上海火车站地区",
-      "浦东陆家嘴金融贸易区",
-      "四川北路商业区",
-      "人民广场地区",
-      "南翔、安亭汽车城"
-    ],
-    "热门行政区": [
-      "静安区",
-      "徐汇区",
-      "长宁区",
-      "黄埔区",
-      "虹口区",
-      "宝山区",
-      "闸北区"
-    ]
-  },
-  "地铁沿线":{
-
-  } 
-};
 
 //设定内置的属性
 //选中项，例如：_type_0_2 表示第一个Tab选中，并且第二个Tab中的第三项选中
@@ -73,7 +45,7 @@ var MenuList = React.createClass({
       kIndex++;
     }
     obj.tabSelected = tabSelected;
-    console.log(obj);
+    obj.nSelected = nSelected;
     return obj;
   },
   render: function(){
@@ -92,7 +64,7 @@ var MenuList = React.createClass({
           <ScrollView style={[styles.flex_1, styles.right_pannel]}>
             {right}
           </ScrollView>
-          
+
         </View>
       </View>
     );
@@ -101,7 +73,7 @@ var MenuList = React.createClass({
   //渲染头部TabBar
   renderlHeader: function(){
     var data = this.props.data;
-    var tabSelected = this.props.tabSelected;
+    var tabSelected = this.state.tabSelected;
     var header = [];
     var tabIndex = 0;
     for(var i in data){
@@ -112,9 +84,10 @@ var MenuList = React.createClass({
         tabStyle = [styles.header_text];
       }
       header.push(
-        <View style={[styles.flex_1, styles.center]}>
+        <TouchableOpacity style={[styles.flex_1, styles.center]}
+                          onPress={this.headerPress.bind(this, i)}>
           <Text style={tabStyle}>{i}</Text>
-        </View>
+        </TouchableOpacity>
       );
       tabIndex ++;
     }
@@ -124,14 +97,16 @@ var MenuList = React.createClass({
   //渲染左侧
   renderLeft: function(){
     var data = this.props.data;
-    var tabSelected = this.props.tabSelected;
+    var tabSelected = this.state.tabSelected;
     var leftPannel = [];
     var index = 0;
     for(var i in data){
       if(index === tabSelected){
         for(var k in data[i]){
           var style = this.state[prefixStyle + i + '_' + k];
-          leftPannel.push(<Text onPress={this.showRight.bind(this, i, k)} style={[styles.left_row, style]}>  {k}</Text>);
+          leftPannel.push(
+            <Text onPress={this.leftPress.bind(this, i, k)}
+                  style={[styles.left_row, style]}>  {k}</Text>);
         }
         break;
       }
@@ -142,8 +117,8 @@ var MenuList = React.createClass({
   //渲染右边，二级菜单
   renderRight: function(){
     var data = this.props.data;
-    var tabSelected = this.props.tabSelected;
-    var nSelected = this.props.nSelected;
+    var tabSelected = this.state.tabSelected;
+    var nSelected = this.state.nSelected;
     var index = 0;
     var rightPannel = [];
     for(var i in data){
@@ -151,7 +126,8 @@ var MenuList = React.createClass({
         for(var k in data[i]){
           if(this.state[prefixType + i + '_' + k]){
             for(var j in data[i][k]){
-              rightPannel.push(<Text style={styles.left_row}>{data[i][k][j]}</Text>);
+              rightPannel.push(
+                <Text onPress={this.props.click.bind(this, data[i][k][j])} style={styles.left_row}>{data[i][k][j]}</Text>);
             }
             break;
           }
@@ -162,7 +138,7 @@ var MenuList = React.createClass({
     return rightPannel;
   },
   //点击左侧，展示右侧二级菜单
-  showRight: function(tabIndex, nIndex){
+  leftPress: function(tabIndex, nIndex){
     var obj = {};
     for(var k in this.state){
       //将prefixType或者prefixStyle类型全部置false
@@ -180,6 +156,32 @@ var MenuList = React.createClass({
     obj[prefixType + tabIndex + '_' + nIndex] = true;
     obj[prefixStyle + tabIndex + '_' + nIndex] = defaultBackgroundColor;
     this.setState(obj);
+  },
+  //头部点击事件即Tab切换事件
+  headerPress: function(title){
+    var data = this.props.data;
+    var index = 0;
+    for(var i in data){
+      if(i === title){
+        this.setState({
+          tabSelected: index,
+        });
+        var obj = {};
+        var n = 0;
+        for(var k in data[i]){
+          if(n !== 0){
+            obj[prefixType + i + '_' + k] = false;
+            obj[prefixStyle + i + '_' + k] = {};
+          }else{
+            obj[prefixType + i + '_' + k] = true;
+            obj[prefixStyle + i + '_' + k] = defaultBackgroundColor;
+          }
+          n ++;
+        }
+        this.setState(obj);
+      }
+      index ++;
+    }
   }
 });
 
@@ -231,18 +233,7 @@ var styles = StyleSheet.create({
   }
 });
 
-var App = React.createClass({
-  render: function(){
-    return (
-      <View style={{marginTop:25}}>
-        <MenuList data={data} nSelected={1} tabSelected={0}/>
-      </View>
-    );
-  }
-});
-
-
-AppRegistry.registerComponent('catapp', () => App);
+module.exports = MenuList;
 
 
 
